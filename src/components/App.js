@@ -1,31 +1,21 @@
 import React, { useState } from "react";
 import "../styles/App.css";
-import { FormControl, Button, TextField } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 const App = () => {
   const [account, setaccount] = useState({
     username: "",
     email: "",
-    gender: "",
+    gender: "Male",
     phonenum: "",
     password: ""
   });
-  const [error, setError] = useState({
-    username: "",
-    email: "",
-    gender: "",
-    phonenum: "",
-    password: "",
-    mendatory: "",
-    message: ""
-  });
+  const [error, setError] = useState({ message: "" });
   const handlechange = (property, event) => {
     const accountCopy = {
       ...account
     };
-
     accountCopy[property] = event.target.value;
     setaccount(accountCopy);
-
     validate(property);
   };
   const validateUsername = () => {
@@ -68,10 +58,24 @@ const App = () => {
     const errorCopy = { ...error };
     if (isEmpty(account.phonenum)) {
       errorCopy.message = "All fields are mendatory";
-    } else if (account.phonenum.length > 10) {
-      errorCopy.message = "Phone number should be 10 digits.";
     } else if (account.phonenum.includes(" ")) {
       errorCopy.message = "Phone number cannot contain space";
+    } else {
+      errorCopy.message = "";
+    }
+    setError(errorCopy);
+  };
+  const validateGender = () => {
+    const errorCopy = { ...error };
+    let string = account.gender.toLowerCase();
+    if (isEmpty(account.gender)) {
+      errorCopy.message = "All fields are mendatory";
+    } else if (
+      string !== "male" ||
+      string !== "female" ||
+      string !== "others"
+    ) {
+      errorCopy.message = "Please identify as male, female or others";
     } else {
       errorCopy.message = "";
     }
@@ -86,6 +90,8 @@ const App = () => {
       validateEmail();
     } else if (property === "phonenum") {
       validatePhonenum();
+    } else if (property === "gender") {
+      validateGender();
     }
   };
   const [welcome, setwelcome] = useState("");
@@ -99,87 +105,100 @@ const App = () => {
     <div id="main" className="displaydiv">
       <div> {welcome}</div>
       <div>{error.message}</div>
-      <FormControl>
-        <TextField
-          value={account.username}
-          onChange={(event) => handlechange("username", event)}
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          error={error.message}
-          // helperText={error.message}
-          id="username"
-          label="Username"
-          name="username"
-          autoFocus
-          data-testid="name"
-        />
-      </FormControl>
-      <FormControl>
-        <TextField
-          data-testid="email"
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          name="EmailId"
-          label="EmailId"
-          error={error.message}
-          // helperText={error.message}
-          type="email"
-          id="email"
-          autoComplete="current-email"
-          value={account.email}
-          onChange={(event) => handlechange("email", event)}
-        />
-      </FormControl>
-      <FormControl>
-        <TextField
-          data-testid="phoneNumber"
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          name="MobileNumber"
-          label="Mobile No."
-          error={error.message}
-          // helperText={error.message}
-          type="text"
-          id="number"
-          autoComplete="current-num"
-          value={account.phonenum}
-          onChange={(event) => handlechange("phonenum", event)}
-        />
-      </FormControl>
-      <FormControl>
-        <TextField
-          data-testid="password"
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          name="password"
-          label="Password"
-          error={error.message}
-          // helperText={error.message}
-          type="password"
-          id="password"
-          autoComplete="current-password"
-          value={account.password}
-          onChange={(event) => handlechange("password", event)}
-        />
-      </FormControl>
-
-      <Button
-        data-testid="submit"
-        variant="contained"
-        color="primary"
-        onClick={handleLogin}
-        className="submit"
-      >
-        submit
-      </Button>
+      <h3>Name</h3>
+      <input
+        value={account.username}
+        onChange={(event) => handlechange("username", event)}
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        error={error.message}
+        // helperText={error.message}
+        id="username"
+        label="Username"
+        name="username"
+        autoFocus
+        data-testid="name"
+      />
+      <h3>Email Id</h3>
+      <input
+        data-testid="email"
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        name="EmailId"
+        label="EmailId"
+        error={error.message}
+        // helperText={error.message}
+        type="email"
+        id="email"
+        autoComplete="current-email"
+        value={account.email}
+        onChange={(event) => handlechange("email", event)}
+      />
+      <h3>Phone number</h3>
+      <input
+        data-testid="phoneNumber"
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        name="MobileNumber"
+        label="Mobile No."
+        error={error.message}
+        // helperText={error.message}
+        type="number"
+        id="number"
+        autoComplete="current-num"
+        value={account.phonenum}
+        onChange={(event) => handlechange("phonenum", event)}
+      />
+      <h3>Password</h3>
+      <input
+        data-testid="password"
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        name="password"
+        label="Password"
+        error={error.message}
+        // helperText={error.message}
+        type="password"
+        id="password"
+        autoComplete="current-password"
+        value={account.password}
+        onChange={(event) => handlechange("password", event)}
+      />
+      <h3>Gender</h3>
+      <input
+        data-testid="password"
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        name="gender"
+        label="gender"
+        error={error.messsage}
+        // helperText={error.message}
+        type="text"
+        id="gender"
+        autoComplete="current-gender"
+        value={account.gender}
+        onChange={(event) => handlechange("gender", event)}
+      />
+      <div className="submit">
+        <Button
+          data-testid="submit"
+          variant="contained"
+          color="primary"
+          onClick={handleLogin}
+        >
+          submit
+        </Button>
+      </div>
     </div>
   );
 };
